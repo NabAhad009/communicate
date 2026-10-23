@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A letter for you 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg1:#fdeeea;--bg2:#f2c2cc;--text:#7a4350;--ink:#26307a;--paper:#fffaf0;--line:#e7d7c3;--margin:#e9a4a4;
+  --env:#f0d3b4;--env2:#e2b98f;--seal:#a4161a;--glass:rgba(255,255,255,.55);--heart:#e0687f;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#1c1022;--bg2:#4a1d3a;--text:#f0c9d2;--glass:rgba(255,255,255,.12);--heart:#ff8ba3;color-scheme:dark}}
+:root[data-theme="dark"]{--bg1:#1c1022;--bg2:#4a1d3a;--text:#f0c9d2;--glass:rgba(255,255,255,.12);--heart:#ff8ba3;color-scheme:dark}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(circle at 30% 20%,var(--bg2),var(--bg1) 70%) var(--bg1);color:var(--text);font-family:'Cormorant Garamond',Georgia,serif;overflow:hidden;position:relative}
+#hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.h{position:absolute;bottom:-40px;color:var(--heart);opacity:0;animation:float linear infinite}
+@keyframes float{10%{opacity:.5}100%{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+
+/* ENVELOPE */
+#scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.2rem;transition:opacity 1s,transform 1s}
+#scene.gone{opacity:0;transform:scale(1.25);pointer-events:none}
+.title{font-size:1.5rem;font-style:italic;text-align:center;padding:0 1rem;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.55}}
+.env{--w:min(84vw,360px);position:relative;width:var(--w);height:calc(var(--w)*.68);perspective:900px;cursor:pointer;filter:drop-shadow(0 18px 28px rgba(90,30,50,.35));animation:bob 4s ease-in-out infinite}
+.env.open{animation:none}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.env>*{position:absolute}
+.back{inset:0;background:var(--env2);border-radius:6px}
+.letter{left:7%;right:7%;top:6%;height:88%;background:var(--paper);border-radius:4px;z-index:1;transition:transform 1.1s cubic-bezier(.3,.8,.3,1) .7s;background-image:repeating-linear-gradient(transparent 0 17px,var(--line) 17px 18px)}
+.open .letter{transform:translateY(-52%)}
+.front{inset:0;z-index:2;background:linear-gradient(160deg,var(--env),var(--env2));clip-path:polygon(0 0,50% 54%,100% 0,100% 100%,0 100%);border-radius:6px}
+.flap{left:0;right:0;top:0;height:56%;z-index:3;background:linear-gradient(var(--env),#e8c7a0);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .8s ease,z-index 0s .4s}
+.open .flap{transform:rotateX(180deg);z-index:0}
+.seal{left:50%;top:54%;z-index:5;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;border:0;color:#ffd9d9;font-size:26px;cursor:pointer;background:radial-gradient(circle at 35% 30%,#d8353a,var(--seal));box-shadow:0 4px 10px rgba(0,0,0,.35),inset 0 -3px 6px rgba(0,0,0,.25);transition:opacity .4s,transform .4s}
+.open .seal{opacity:0;transform:scale(.4)}
+.tap{font-size:1.05rem;opacity:.8;letter-spacing:.08em}
+
+/* LETTER SLIDES */
+#book{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 1.2s .3s}
+#book.show{opacity:1;pointer-events:auto}
+#track{flex:1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#track::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:center;display:flex;align-items:center;justify-content:center;padding:1rem}
+.paper{position:relative;width:min(92vw,520px);min-height:min(62vh,430px);box-sizing:border-box;padding:2.4rem 1.4rem 2rem 3.4rem;background:var(--paper);border-radius:6px;box-shadow:0 20px 45px rgba(90,30,50,.3),0 2px 0 #fff inset;
+  background-image:linear-gradient(90deg,transparent 2.6rem,var(--margin) 2.6rem 2.7rem,transparent 2.7rem),repeating-linear-gradient(transparent 0 2.1rem,var(--line) 2.1rem 2.2rem);background-position:0 0,0 1.7rem;
+  transform:rotate(-1.2deg);display:flex;flex-direction:column;justify-content:center;transition:transform .6s}
+.slide:nth-child(even) .paper{transform:rotate(1deg)}
+.paper::before{content:"";position:absolute;top:-12px;left:50%;width:90px;height:26px;margin-left:-45px;background:rgba(240,200,120,.55);transform:rotate(-3deg)}
+.msg{font-family:'Caveat','Segoe Script',cursive;font-weight:600;color:var(--ink);font-size:1.6rem;line-height:2.2rem;margin:0}
+.msg .w{display:inline-block;white-space:nowrap}
+.msg .c{opacity:0;display:inline-block}
+.slide.on .c{animation:ink .12s ease-out forwards;animation-delay:calc(var(--i)*24ms + .5s)}
+@keyframes ink{from{opacity:0;filter:blur(2px);transform:translateY(2px)}to{opacity:1;filter:none;transform:none}}
+.sign{margin-top:1.2rem;font-size:2rem}
+.btns{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.4rem;opacity:0;transition:opacity 1s 5s}
+.slide.on .btns{opacity:1}
+.btns button{font:inherit;font-family:'Caveat',cursive;font-size:1.3rem;font-weight:600;padding:.5rem 1.1rem;border-radius:99px;border:2px solid var(--seal);cursor:pointer;color:var(--seal);background:transparent}
+.btns button.y{background:var(--seal);color:#fff}
+.reply{font-family:'Caveat',cursive;font-size:1.5rem;color:var(--seal);margin-top:1rem;min-height:2rem}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:center;gap:1.2rem;padding:.6rem 0 1.6rem}
+nav button{width:44px;height:44px;border-radius:50%;border:0;font-size:1.3rem;cursor:pointer;background:var(--glass);color:var(--text);backdrop-filter:blur(6px);box-shadow:0 4px 12px rgba(90,30,50,.2)}
+nav button:disabled{opacity:.3;cursor:default}
+.dots{display:flex;gap:8px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--text);opacity:.3;transition:.4s}
+.dots i.a{opacity:1;width:24px;border-radius:8px;background:var(--seal)}
+.swipe{text-align:center;font-style:italic;opacity:.7;font-size:1rem;transition:opacity .6s}
+</style>
+</head>
+<body>
+<div id="hearts"></div>
+
+<div id="scene">
+  <div class="title" id="hello"></div>
+  <div class="env" id="env">
+    <div class="back"></div>
+    <div class="letter"></div>
+    <div class="front"></div>
+    <div class="flap"></div>
+    <button class="seal" id="seal" aria-label="Open the letter">♥</button>
+  </div>
+  <div class="tap">Tap The Envelop to Open the Message.</div>
+</div>
+
+<div id="book">
+  <div id="track"></div>
+  <div class="swipe" id="swipe">swipe or tap → to keep reading</div>
+  <nav>
+    <button id="prev" aria-label="Previous">‹</button>
+    <div class="dots" id="dots"></div>
+    <button id="next" aria-label="Next">›</button>
+  </nav>
+</div>
+
+<script>
+/* ✏️ EDIT THESE ✏️ */
+var HER = "Nabiha";          // her name
+var YOU = "Ahad";        // your name
+var MESSAGES = [
+  "Dear " + HER + ",\nI don’t know how to begin, so I’ll begin with the truth: I want to get the things sorted between us. Read the whole message further.",
+  "I know I hurt you. And I know what you do or doing is for me to realize that I was wrong with my words, but my intentions was never",
+  "You're my everything and I know react the wrong way but my anger was never on you, Understand this.",
+  "Whatever is bothering you, the circumstances you're in, all will get resolved one day, but don't behave like this, you know we love each other.",
+  "Silence is never an answer, talk to me and let me know, there is nothing we cannot sort out without communicating.",
+  "I have understood everything, I have accepted my mistake, now acccept my apologies.",
+  "Now remove your anger, and pull your mature self to summarize what actually wrong and how it can be fulfilled, you're mature enough.",
+  "Now Message me on Instagram, You know its been too long to be communicated."
+];
+
+function $(id){return document.getElementById(id)}
+$("hello").textContent = "I don't know how to ask you or anything, I don't know what to message you, I think this could be the best way to communicate what I want";
+
+/* floating hearts */
+for(var i=0;i<16;i++){var h=document.createElement("span");h.className="h";h.textContent=i%3?"♥":"❀";
+  h.style.left=Math.random()*100+"%";h.style.fontSize=(12+Math.random()*20)+"px";
+  h.style.animationDuration=(9+Math.random()*10)+"s";h.style.animationDelay=(-Math.random()*14)+"s";$("hearts").appendChild(h)}
+
+/* build slides */
+var track=$("track"),dots=$("dots"),n=MESSAGES.length,idx=0,k;
+function write(text){
+  var out="",c=0;
+  text.split("\n").forEach(function(line,li){
+    if(li)out+="<br>";
+    line.split(" ").forEach(function(w){
+      out+='<span class="w">';
+      w.split("").forEach(function(ch){out+='<span class="c" style="--i:'+(c++)+'">'+ch+'</span>'});
+      out+='</span> ';c++;
+    });
+  });
+  return out;
+}
+MESSAGES.forEach(function(m,i){
+  var s=document.createElement("div");s.className="slide";
+  var html='<div class="paper"><p class="msg">'+write(m)+'</p>';
+  if(i===n-1){
+    html+='<p class="msg sign">— '+YOU+' ♥</p>'+
+    // '<div class="btns"><button class="y" id="yes">Let’s talk 💗</button><button id="time">I need some time</button></div>'+
+    '<div class="reply" id="reply"></div>';
+  }
+  s.innerHTML=html+'</div>';track.appendChild(s);
+  var d=document.createElement("i");dots.appendChild(d);
+});
+var slides=track.children,dotEls=dots.children;
+
+function setActive(i){
+  idx=i;
+  for(k=0;k<n;k++){slides[k].classList.toggle("on",k===i);dotEls[k].classList.toggle("a",k===i)}
+  $("prev").disabled=i===0;$("next").disabled=i===n-1;
+  if(i>0)$("swipe").style.opacity=0;
+}
+function go(i){track.scrollTo({left:i*track.clientWidth,behavior:"smooth"})}
+$("prev").onclick=function(){go(Math.max(0,idx-1))};
+$("next").onclick=function(){go(Math.min(n-1,idx+1))};
+track.addEventListener("scroll",function(){var i=Math.round(track.scrollLeft/track.clientWidth);if(i!==idx&&i>=0&&i<n)setActive(i)});
+document.addEventListener("keydown",function(e){if(e.key==="ArrowRight")$("next").click();if(e.key==="ArrowLeft")$("prev").click()});
+
+/* final answers */
+document.addEventListener("click",function(e){
+  var r=$("reply");if(!r)return;
+  if(e.target.id==="yes")r.textContent="Thank you. You’ve made my heart so much lighter. I’m here, always. 💗";
+  if(e.target.id==="time")r.textContent="Of course. Take all the time you need. I’ll be right here, waiting. 🤍";
+});
+
+/* open envelope */
+var opened=false;
+function openEnv(){
+  if(opened)return;opened=true;
+  $("env").classList.add("open");
+  setTimeout(function(){$("scene").classList.add("gone");$("book").classList.add("show");setActive(0)},2600);
+}
+$("env").onclick=openEnv;
+</script>
+</body>
+</html>
